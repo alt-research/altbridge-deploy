@@ -38,3 +38,31 @@ There are multiple subcommands provided:
 - [`erc721`](docs/erc721.md): Interactions with ERC721 contracts and handler
 
 
+## Deployment
+
+**Note: The following steps should be further refine.**
+The current stable build is found in `feature/v2` branch, where the `cli.sh` is located in `cb-sol-cli` folder.
+
+### Setting up the environment variables
+Go to `Gdrive -> Alt Dev Docs -> bridge -> ChainBridge 使用手册`, copy the bash script into a file called `env.sh` and place it inside `cb-sol-cli` folder.
+This will preset all the hardcoded keys and generated APIs.
+
+TODO: To generalise this portion
+
+### Contract deployment
+To deploy, `./cli.sh <ETH network> deploy`. Upon completion of deployment, update `env.sh` with the new values of the deployed contracts i.e ERC-20, ERC-721 contracts and the related handler contracts.
+- BRIDGE_ADDR_<ETH network>
+- ERC20_HANDLER_<ETH network>
+- ERC20_ADDR_ALT1_<ETH network>
+- ERC721_ADDR_NFT1_<ETH network>
+- ERC721_HANDLER_<ETH network>
+
+TODO: Seperate the deploy steps for bridge and token contracts. Make the process more generic.
+
+### Initialise the contracts
+To initialise the contracts, `./cli.sh <ETH network> init`
+Upon completion of deployment, update `env.sh` with the new values of the resourceID ERC-20/ERC-721 contracts.
+- RESOURCE_ID_ALT1
+- RESOURCE_ID_NFT1
+
+Note: ResourceID is currently a random generated 32-bytes string that assocate with one particular token on the bridge.
