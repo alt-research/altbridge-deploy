@@ -191,7 +191,7 @@ function add_token() {
 }
 
 function init_nft() {
-	echo 'add nft resource'
+	echo 'add ERC-721 resource mapping'
 	add_nft_resource
 	echo 'setup burnable'
 	_call bridge set-burn --bridge ${BRIDGE_ADDR} --handler ${ERC721_HANDLER} --tokenContract ${ERC721_ADDR}
@@ -205,13 +205,13 @@ function init() {
 }
 
 function init_erc20() {
-	echo 'mint erc20...'
+	echo 'mint erc-20...'
 	mint_erc20
 	echo 'approve'
 	approve
-	echo 'mint to erc20 handler...'
+	echo 'mint to erc-20 handler...'
 	mint_erc20_to_handler
-	echo 'add resource mapping'
+	echo 'add erc-20 resource mapping'
 	add_resource
 }
 
