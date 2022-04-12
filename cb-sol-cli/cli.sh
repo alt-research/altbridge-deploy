@@ -22,7 +22,7 @@
 source ./env.sh
 
 export THRESHOLD=1
-export GAS_PRICE=40000000000
+export GAS_PRICE=2000000000 # 2 gwei
 export GAS_LIMIT=100000
 export GAS_LIMIT_2=200000
 export GAS_LIMIT_DEPLOY=6000000
