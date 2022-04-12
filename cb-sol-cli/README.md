@@ -2,13 +2,6 @@
 
 This CLI supports on-chain interactions with components of ChainBridge.
 
-## Installation 
-
-Installation requires the ABI files from the contracts which will be fetched and built from the chainbridge-solidity repo.
-```
-$ make install
-```
-
 ## Usage 
 
 The root command (`cb-sol-cli`) has some options:
@@ -38,18 +31,31 @@ There are multiple subcommands provided:
 - [`erc721`](docs/erc721.md): Interactions with ERC721 contracts and handler
 
 
+## Installation
+
+Installation requires the ABI files from the contracts which will be fetched and built from the chainbridge-solidity repo.
+```shell
+$ make install
+```
+
 ## Deployment
 
-**Note: The following steps should be further refine.**
-The current stable build is found in `feature/v2` branch, where the `cli.sh` is located in `cb-sol-cli` folder.
+First, ensure you have built the project by calling `make install`.
+
+### Account funding
+
+Contract deploiyment and calling of contracts will take ~0.5 ETH. Please ensure your deployment account is sufficiently funded.
+
 
 ### Setting up the environment variables
+
 Go to `Gdrive -> Alt Dev Docs -> bridge -> ChainBridge 使用手册`, copy the bash script into a file called `env.sh` and place it inside `cb-sol-cli` folder.
 This will preset all the hardcoded keys and generated APIs.
 
 TODO: To generalise this portion
 
 ### Contract deployment
+
 To deploy, `./cli.sh <ETH network> deploy`. Upon completion of deployment, update `env.sh` with the new values of the deployed contracts i.e ERC-20, ERC-721 contracts and the related handler contracts.
 - BRIDGE_ADDR_<ETH network>
 - ERC20_HANDLER_<ETH network>
@@ -57,12 +63,17 @@ To deploy, `./cli.sh <ETH network> deploy`. Upon completion of deployment, updat
 - ERC721_ADDR_NFT1_<ETH network>
 - ERC721_HANDLER_<ETH network>
 
+Afterwhich, run `source env.sh`
+
 TODO: Seperate the deploy steps for bridge and token contracts. Make the process more generic.
 
 ### Initialise the contracts
+
 To initialise the contracts, `./cli.sh <ETH network> init`
 Upon completion of deployment, update `env.sh` with the new values of the resourceID ERC-20/ERC-721 contracts.
 - RESOURCE_ID_ALT1
 - RESOURCE_ID_NFT1
+
+Afterwhich, run `source env.sh`
 
 Note: ResourceID is currently a random generated 32-bytes string that assocate with one particular token on the bridge.
