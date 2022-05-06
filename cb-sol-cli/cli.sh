@@ -135,6 +135,24 @@ function erc20_balance() {
 	_call erc20 balance --address $addr --erc20Address ${ERC20_ADDR}
 }
 
+function erc721_owner() {
+	addr=$1
+	if [[ "$addr" == "" ]]; then
+		echo "usage: $0 erc721_owner <addr>"
+		return 1
+	fi
+	_call erc721 owner --id $addr --erc721Address ${ERC721_ADDR}
+}
+
+function erc721_tokenURI() {
+	addr=$1
+	if [[ "$addr" == "" ]]; then
+		echo "usage: $0 erc721_owner <addr>"
+		return 1
+	fi
+	_call erc721 tokenURI --id $addr --erc721Address ${ERC721_ADDR}
+}
+
 function _approve_erc721() {
 	_PK=$1 _call erc721 approve --id $2 --recipient ${ERC721_HANDLER} --erc721Address ${ERC721_ADDR}
 }
@@ -352,6 +370,10 @@ function erc20_rollup() {
 	_call erc20 rollup --resourceID ${RESOURCE_ID} --batch 100 --destDomainId $dest --address ${ERC20_ADDR}
 }
 
+function erc721_rollup() {
+	dest=$(_domain_id $1)
+	_call erc721 rollup --resourceID ${NFT_RESOURCE_ID} --batch 100 --destDomainId $dest --address ${ERC721_ADDR}
+}
 
 function deposit_nft() {
 	if [[ "$2" == "" ]]; then

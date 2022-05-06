@@ -1,8 +1,20 @@
 const ethers = require('ethers');
 const constants = require('../constants');
 
-const {Command} = require('commander');
-const {setupParentArgs, waitForTx, log} = require("./utils")
+const { Command } = require('commander');
+const { setupParentArgs, waitForTx, log } = require("./utils")
+
+const tokenURICmd = new Command("tokenURI")
+    .description("Mint tokens")
+    .option('--erc721Address <address>', 'ERC721 contract address', constants.ERC721_ADDRESS)
+    .option('--id <id>', "Token id", "0x1")
+    .action(async function (args) {
+        await setupParentArgs(args, args.parent.parent)
+        const erc721Instance = new ethers.Contract(args.erc721Address, constants.ContractABIs.Erc721Mintable.abi, args.wallet);
+        const owner = await erc721Instance.tokenURI(ethers.utils.hexlify(args.id))
+        log(args, `tokenURI of token ${args.id} is ${owner}`)
+    })
+
 
 const mintCmd = new Command("mint")
     .description("Mint tokens")
@@ -17,10 +29,27 @@ const mintCmd = new Command("mint")
         if (recipient == "") {
             recipient = args.wallet.address;
         }
+        if (args.metadata == "") {
+            args.metadata = "metadata for " + args.id;
+        }
 
         log(args, `Minting token with id ${args.id} to ${recipient} on contract ${args.erc721Address}!`);
         const tx = await erc721Instance.mint(recipient, ethers.utils.hexlify(args.id), args.metadata);
         await waitForTx(args.provider, tx.hash)
+    })
+
+const rollupCmd = new Command("rollup")
+    .description("trigger rollup")
+    .option('--address <address>', 'contract address', "")
+    .option('--batch <batch>', 'contract address', 100)
+    .option('--destDomainId <domainId>', 'RollupExample contract address', 0)
+    .option('--resourceID <resourceID>', 'resourceID', "")
+    .action(async function (args) {
+        await setupParentArgs(args, args.parent.parent)
+
+        const exampleInstance = new ethers.Contract(args.address, constants.ContractABIs.Erc721Mintable.abi, args.wallet);
+        const tx = await exampleInstance.rollupToOtherChain(args.destDomainId, args.resourceID);
+        await waitForTx(args.provider, tx.hash);
     })
 
 const ownerCmd = new Command("owner")
@@ -95,7 +124,7 @@ const depositCmd = new Command("deposit")
             args.dest, // destination chain id
             args.resourceId,
             data,
-            {gasPrice: args.gasPrice, gasLimit: args.gasLimit});
+            { gasPrice: args.gasPrice, gasLimit: args.gasLimit });
         await waitForTx(args.provider, tx.hash)
     })
 
@@ -137,5 +166,7 @@ erc721Cmd.addCommand(addMinterCmd)
 erc721Cmd.addCommand(approveCmd)
 erc721Cmd.addCommand(depositCmd)
 erc721Cmd.addCommand(proposalDataHashCmd)
+erc721Cmd.addCommand(rollupCmd)
+erc721Cmd.addCommand(tokenURICmd)
 
 module.exports = erc721Cmd
